@@ -10,7 +10,7 @@
     "lint": "eslint . --ext ts,tsx",
     "lint:fix": "eslint --fix . --ext ts,tsx",
     "preview": "vite preview",
-    "precommit": "npm run lint && npm run format",
+    "precommit": "npm run format && npm run lint:fix",
     "prepare": "husky install"
   },
   "dependencies": {
