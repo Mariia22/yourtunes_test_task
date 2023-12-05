@@ -23,3 +23,8 @@ export interface AxiosParams {
   params?: AxiosRequestConfig['params']
   headers?: AxiosRequestConfig['headers']
 }
+
+export interface ReleaseAvaType {
+  uid: string
+  ava_link: string
+}

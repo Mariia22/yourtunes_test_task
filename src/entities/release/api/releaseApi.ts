@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { type AxiosParams, type ReleaseType } from './types'
+import { type ReleaseAvaType, type AxiosParams, type ReleaseType } from './types'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
 import type { AxiosError } from 'axios'
 import { queryHeaders } from '../../../shared/api'
@@ -46,12 +46,46 @@ export const releaseApi = createApi({
         transformResponse: (rawResult: { result: ReleaseType[] }) => {
           return rawResult.result
         }
+      }),
+      getReleaseById: build.query<ReleaseAvaType, string>({
+        query: (id) => ({
+          url: '/release/realese_get_ava',
+          method: 'get',
+          params: id,
+          headers: queryHeaders
+        })
+        // transformResponse: (response) => response.post,
+      }),
+      addRelease: build.mutation<ReleaseAvaType, FormData>({
+        query: (file) => ({
+          url: '/release/add',
+          method: 'post',
+          data: file,
+          headers: queryHeaders
+        })
+      }),
+      editRelease: build.mutation({
+        query: () => ({
+          url: '/release/release_update_ava',
+          method: 'put',
+          headers: queryHeaders
+        })
+      }),
+      deleteRelease: build.mutation({
+        query: () => ({
+          url: '/release/release_delete',
+          method: 'delete',
+          headers: queryHeaders
+        })
       })
-      // mutation: build.mutation({
-      //   query: () => ({ url: '/mutation', method: 'post' }),
-      // }),
     }
   }
 })
 
-export const { useGetAllReleasesQuery } = releaseApi
+export const {
+  useGetAllReleasesQuery,
+  useGetReleaseByIdQuery,
+  useAddReleaseMutation,
+  useEditReleaseMutation,
+  useDeleteReleaseMutation
+} = releaseApi

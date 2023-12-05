@@ -1,3 +1,5 @@
+const { off } = require('process')
+
 module.exports = {
   env: {
     browser: true,
@@ -18,6 +20,7 @@ module.exports = {
   plugins: ['react'],
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
-    '@typescript-eslint/no-invalid-void-type': 0
+    '@typescript-eslint/no-invalid-void-type': 0,
+    '@typescript-eslint/no-misused-promises': 'off'
   }
 }
