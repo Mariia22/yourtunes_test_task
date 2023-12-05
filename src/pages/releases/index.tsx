@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   useAddReleaseMutation,
   useGetAllReleasesQuery
@@ -6,24 +6,31 @@ import {
 import { Release } from '../../entities/release/ui/Release'
 import { Button, FileInput } from '@mantine/core'
 import { useForm } from '@mantine/form'
+import { checkReleaseAva } from '../../entities/release/lib/checkReleaseAva'
 
 export const ReleasesPage: React.FC = () => {
   const { data, isLoading, isError } = useGetAllReleasesQuery()
   const [addRelease, error] = useAddReleaseMutation()
+  const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   const form = useForm({
     initialValues: { releaseAva: null }
   })
-  type FormValues = typeof form.values
 
-  const handleSubmit = async (values: FormValues): Promise<void> => {
-    const formData = new FormData()
+  const handleSubmit = async (values: { releaseAva: null | File }): Promise<void> => {
     const { releaseAva } = values
-    if (releaseAva !== null && !releaseAva) {
-      formData.append('input_ava', releaseAva)
-      await addRelease(formData)
+
+    if (releaseAva !== null) {
+      setValidationErrors([...await checkReleaseAva(releaseAva)])
+
+      if (validationErrors.length === 0) {
+        const formData = new FormData()
+        formData.append('input_ava', releaseAva)
+        await addRelease(formData)
+      }
     }
   }
+
   console.log(error)
   if (isError) {
     return <div>Oh no, there was an error</div>
@@ -44,12 +51,15 @@ export const ReleasesPage: React.FC = () => {
       ))}
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <FileInput
+          accept="image/png,image/jpg"
+          clearable
           label="Add release"
           placeholder="Choose a cover for your release"
           {...form.getInputProps('releaseAva')}
         />
         <Button type="submit">Add release</Button>
       </form>
+      <div>{validationErrors.length !== 0 && validationErrors.map(error => (<div key={error}>{error}</div>))}</div>
     </div>
   )
 }
