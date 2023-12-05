@@ -5,7 +5,7 @@ export interface ReleaseType {
   updated_at: string
   uid: string
   upc: string
-  ava_link: string
+  avalink: string
   name: string
   main_singers: string[]
   type: string

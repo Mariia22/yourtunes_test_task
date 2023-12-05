@@ -17,7 +17,7 @@ export const checkReleaseAva = async (file: File): Promise<string[]> => {
     errors.push('Ширина должна быть равна 3000px')
   }
 
-  if (file.type === 'image/png' || file.type === 'image/jpg') {
+  if (file.type === 'image/png' || file.type === 'image/jpeg') {
     return errors
   } else {
     errors.push('Tип файла должен быть .jpg или .png')

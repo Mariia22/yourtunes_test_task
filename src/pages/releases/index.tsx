@@ -21,17 +21,19 @@ export const ReleasesPage: React.FC = () => {
     const { releaseAva } = values
 
     if (releaseAva !== null) {
-      setValidationErrors([...await checkReleaseAva(releaseAva)])
+      const errors = await checkReleaseAva(releaseAva)
+      setValidationErrors([...errors])
 
       if (validationErrors.length === 0) {
         const formData = new FormData()
         formData.append('input_ava', releaseAva)
+        form.reset()
         await addRelease(formData)
       }
     }
   }
 
-  console.log(error)
+  console.log(data, error)
   if (isError) {
     return <div>Oh no, there was an error</div>
   }
@@ -40,15 +42,16 @@ export const ReleasesPage: React.FC = () => {
     return <div>Loading...</div>
   }
 
-  if (data === undefined || data.length !== 0) {
+  if (data === undefined || data.length === 0) {
     return null
   }
 
   return (
     <div>
       {data.map((release) => (
-        <Release key={release.uid} />
+        <Release key={release.uid} avalink={release.avalink} />
       ))}
+
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <FileInput
           accept="image/png,image/jpg"
@@ -59,7 +62,10 @@ export const ReleasesPage: React.FC = () => {
         />
         <Button type="submit">Add release</Button>
       </form>
-      <div>{validationErrors.length !== 0 && validationErrors.map(error => (<div key={error}>{error}</div>))}</div>
+      <div>
+        {validationErrors.length !== 0 &&
+          validationErrors.map((error) => <div key={error}>{error}</div>)}
+      </div>
     </div>
   )
 }

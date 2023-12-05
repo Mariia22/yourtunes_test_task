@@ -35,6 +35,7 @@ export const releaseApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: 'https://dev-api-v2.yourtunes.net/api/v2'
   }),
+  tagTypes: ['Release'],
   endpoints (build) {
     return {
       getAllReleases: build.query<ReleaseType[], void>({
@@ -45,7 +46,8 @@ export const releaseApi = createApi({
         }),
         transformResponse: (rawResult: { result: ReleaseType[] }) => {
           return rawResult.result
-        }
+        },
+        providesTags: (result) => ['Release']
       }),
       getReleaseById: build.query<ReleaseAvaType, string>({
         query: (id) => ({
@@ -62,7 +64,8 @@ export const releaseApi = createApi({
           method: 'post',
           data: file,
           headers: queryHeaders
-        })
+        }),
+        invalidatesTags: ['Release']
       }),
       editRelease: build.mutation({
         query: () => ({
