@@ -20,7 +20,7 @@ export const baseLayout = (
         </NavLink>
       ))}
     </AppShell.Navbar>
-    <AppShell.Main>
+    <AppShell.Main style={{ display: 'flex' }}>
       <Outlet />
     </AppShell.Main>
   </AppShell>

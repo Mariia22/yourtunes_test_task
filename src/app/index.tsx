@@ -15,3 +15,8 @@ export const App: React.FC = () => {
     </Provider>
   )
 }
+
+// TODO: logic of the add/edit/delete and add errors/notifications
+// Loading
+// Replace my code to yup
+// Grid and Colors

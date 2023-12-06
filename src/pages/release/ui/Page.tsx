@@ -4,32 +4,41 @@ import {
   useEditReleaseMutation,
   useGetReleaseByIdQuery
 } from '../../../entities/release/api/releaseApi'
-import { useParams } from 'react-router-dom'
-import { Button, Flex, Image } from '@mantine/core'
+import { useNavigate, useParams } from 'react-router-dom'
+import { Button, Flex, Image, Loader, Text } from '@mantine/core'
 import UploadReleaseForm from '../../../widgets/UploadReleaseForm/UploadReleaseForm'
+import { ModalWindow } from '../../../shared/ui/Modal'
 
 export const ReleasePage: React.FC = () => {
   const { releaseId } = useParams()
   const { data, isError, isLoading } = useGetReleaseByIdQuery({ uid: releaseId })
   const [editRelease] = useEditReleaseMutation()
   const [deleteRelease] = useDeleteReleaseMutation()
-  const [isEditingMode, setEditingMode] = useState(false)
+  const [isEditMode, setEditMode] = useState(false)
+  const [isDeleteMode, setDeleteMode] = useState(false)
+  const navigate = useNavigate()
 
   const handleEdit = (): void => {
-    setEditingMode(!isEditingMode)
+    setEditMode(!isEditMode)
+  }
+
+  const handleDelete = (): void => {
+    setDeleteMode(true)
   }
 
   const uploadRelease = async (formData: FormData): Promise<void> => {
     if (releaseId !== undefined) {
       formData.append('uid', releaseId)
-      setEditingMode(false)
+      setEditMode(false)
       await editRelease(formData)
     }
   }
 
-  const handleDelete = async (): Promise<void> => {
+  const removeRelease = async (): Promise<void> => {
     if (releaseId !== undefined) {
       await deleteRelease({ uid: releaseId })
+      setDeleteMode(false)
+      navigate('/')
     }
   }
 
@@ -38,7 +47,7 @@ export const ReleasePage: React.FC = () => {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loader size={50} style={{ alignSelf: 'center', margin: 'auto' }} />
   }
 
   if (data === undefined) {
@@ -56,7 +65,20 @@ export const ReleasePage: React.FC = () => {
           Delete
         </Button>
       </Flex>
-      {isEditingMode && <UploadReleaseForm onUpload={uploadRelease} label="Upload release" />}
+      {isEditMode && <UploadReleaseForm onUpload={uploadRelease} label="Upload release" />}
+      {isDeleteMode && (
+        <ModalWindow isOpened={isDeleteMode}>
+          <Text> Are you sure you want to delete the release? </Text>
+          <Flex gap="md">
+            <Button w={200} onClick={removeRelease}>
+              Yes
+            </Button>
+            <Button w={200} onClick={() => { setDeleteMode(false) }}>
+              No
+            </Button>
+          </Flex>
+        </ModalWindow>
+      )}
     </Flex>
   )
 }

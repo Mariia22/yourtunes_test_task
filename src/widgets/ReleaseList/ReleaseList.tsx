@@ -1,6 +1,6 @@
 import React from 'react'
 import { useGetAllReleasesQuery } from '../../entities/release/api/releaseApi'
-import { Grid } from '@mantine/core'
+import { Box, Loader, SimpleGrid } from '@mantine/core'
 import { Release } from '../../entities/release/ui/Release'
 
 export const ReleaseList: React.FC = () => {
@@ -11,7 +11,7 @@ export const ReleaseList: React.FC = () => {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return <Loader size={50} style={{ alignSelf: 'center', margin: 'auto' }} />
   }
 
   if (data === undefined || data.length === 0) {
@@ -19,12 +19,12 @@ export const ReleaseList: React.FC = () => {
   }
 
   return (
-    <Grid justify="space-around" align="center">
+    <SimpleGrid cols={3}>
       {data.map(({ uid: id, ava_link: link }) => (
-        <Grid.Col span={3} key={id}>
+        <Box key={id}>
           <Release link={link} id={id} />
-        </Grid.Col>
+        </Box>
       ))}
-    </Grid>
+    </SimpleGrid>
   )
 }
