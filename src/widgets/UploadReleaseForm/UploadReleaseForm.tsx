@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import { useForm } from '@mantine/form'
-import { Button, FileInput } from '@mantine/core'
+import { Button, FileInput, Flex, Loader, Text } from '@mantine/core'
 import { checkReleaseAva } from '../../entities/release/lib/checkReleaseAva'
 
 interface FormProps {
   onUpload: (formData: FormData) => void
   label: string
+  isLoading: boolean
 }
 
-const UploadReleaseForm: React.FC<FormProps> = ({ onUpload, label }) => {
+const UploadReleaseForm: React.FC<FormProps> = ({ onUpload, label, isLoading }) => {
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   const form = useForm({
@@ -31,22 +32,26 @@ const UploadReleaseForm: React.FC<FormProps> = ({ onUpload, label }) => {
   }
 
   return (
-    <>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
-        <FileInput
-          accept="image/png,image/jpg"
-          clearable
-          label={label}
-          placeholder="Choose a cover for your release"
-          {...form.getInputProps('releaseAva')}
-        />
+    <form onSubmit={form.onSubmit(handleSubmit)}>
+      <Flex gap="sm" direction="column">
+        <Flex gap="sm" justify="center" align="center">
+          <FileInput
+            accept="image/png,image/jpg"
+            clearable
+            w="300px"
+            placeholder="Choose a cover for your release"
+            rightSection="↑"
+            {...form.getInputProps('releaseAva')}
+          />
+          {isLoading && <Loader size={20} style={{ alignSelf: 'center' }} />}
+        </Flex>
         <Button type="submit">{label}</Button>
-      </form>
-      <div>
-        {validationErrors.length !== 0 &&
-          validationErrors.map((error) => <div key={error}>{error}</div>)}
-      </div>
-    </>
+        <Flex direction="column">
+          {validationErrors.length !== 0 &&
+            validationErrors.map((error) => <Text key={error}>{error}</Text>)}
+        </Flex>
+      </Flex>
+    </form>
   )
 }
 

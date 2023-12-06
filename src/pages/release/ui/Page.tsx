@@ -12,8 +12,17 @@ import { ModalWindow } from '../../../shared/ui/Modal'
 export const ReleasePage: React.FC = () => {
   const { releaseId } = useParams()
   const { data, isError, isLoading } = useGetReleaseByIdQuery({ uid: releaseId })
-  const [editRelease] = useEditReleaseMutation()
-  const [deleteRelease] = useDeleteReleaseMutation()
+  const [editRelease, { isLoading: isEditLoading, isSuccess, isError: isEditingError, error }] =
+    useEditReleaseMutation()
+  const [
+    deleteRelease,
+    {
+      isLoading: isDeleteLoading,
+      isSuccess: isDeleteSuccess,
+      isError: isDeleteError,
+      error: deleteError
+    }
+  ] = useDeleteReleaseMutation()
   const [isEditMode, setEditMode] = useState(false)
   const [isDeleteMode, setDeleteMode] = useState(false)
   const navigate = useNavigate()
@@ -26,11 +35,15 @@ export const ReleasePage: React.FC = () => {
     setDeleteMode(true)
   }
 
+  const handleClick = (): void => {
+    navigate('/')
+  }
+
   const uploadRelease = async (formData: FormData): Promise<void> => {
     if (releaseId !== undefined) {
       formData.append('uid', releaseId)
-      setEditMode(false)
       await editRelease(formData)
+      setEditMode(false)
     }
   }
 
@@ -38,7 +51,6 @@ export const ReleasePage: React.FC = () => {
     if (releaseId !== undefined) {
       await deleteRelease({ uid: releaseId })
       setDeleteMode(false)
-      navigate('/')
     }
   }
 
@@ -65,20 +77,62 @@ export const ReleasePage: React.FC = () => {
           Delete
         </Button>
       </Flex>
-      {isEditMode && <UploadReleaseForm onUpload={uploadRelease} label="Upload release" />}
+      {isEditMode && (
+        <ModalWindow isOpened={isEditMode}>
+          {isEditMode && (
+            <UploadReleaseForm
+              onUpload={uploadRelease}
+              label="Upload release"
+              isLoading={isEditLoading}
+            />
+          )}
+        </ModalWindow>
+      )}
+      {isSuccess && (
+        <ModalWindow isOpened={true}>
+          <>
+            <Text>File is uploaded</Text>
+            <Flex gap="md">
+              <Button w={200} onClick={handleClick}>
+                Go to Main Page
+              </Button>
+            </Flex>
+          </>
+        </ModalWindow>
+      )}
+      {isEditingError && <Text>Upload is failed, error : {(error as Error).message}</Text>}
       {isDeleteMode && (
         <ModalWindow isOpened={isDeleteMode}>
           <Text> Are you sure you want to delete the release? </Text>
+          {isDeleteLoading && <Loader size={50} />}
           <Flex gap="md">
             <Button w={200} onClick={removeRelease}>
               Yes
             </Button>
-            <Button w={200} onClick={() => { setDeleteMode(false) }}>
+            <Button
+              w={200}
+              onClick={() => {
+                setDeleteMode(false)
+              }}
+            >
               No
             </Button>
           </Flex>
         </ModalWindow>
       )}
+      {isDeleteSuccess && (
+        <ModalWindow isOpened={true}>
+          <>
+            <Text>File is deleted</Text>
+            <Flex gap="md">
+              <Button w={200} onClick={handleClick}>
+                Go to Main Page
+              </Button>
+            </Flex>
+          </>
+        </ModalWindow>
+      )}
+      {isDeleteError && <Text>Upload is failed, error : {(deleteError as Error).message}</Text>}
     </Flex>
   )
 }
