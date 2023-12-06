@@ -3,7 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 import { type ReleaseAvaType, type AxiosParams, type ReleaseType } from './types'
 import type { BaseQueryFn } from '@reduxjs/toolkit/query'
 import type { AxiosError } from 'axios'
-import { queryHeaders } from '../../../shared/api'
+import { queryHeaders } from '../../../shared/api/api'
 
 const axiosBaseQuery =
   (
@@ -35,7 +35,7 @@ export const releaseApi = createApi({
   baseQuery: axiosBaseQuery({
     baseUrl: 'https://dev-api-v2.yourtunes.net/api/v2'
   }),
-  tagTypes: ['Release'],
+  tagTypes: ['Release', 'UpdateRelease', 'DeleteRelease'],
   endpoints (build) {
     return {
       // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
@@ -48,16 +48,19 @@ export const releaseApi = createApi({
         transformResponse: (rawResult: { result: ReleaseType[] }) => {
           return rawResult.result
         },
-        providesTags: (result) => ['Release']
+        providesTags: (result) => ['Release', 'UpdateRelease', 'DeleteRelease']
       }),
-      getReleaseById: build.query<ReleaseAvaType, string>({
+      getReleaseById: build.query<string, Record<'uid', string | undefined>>({
         query: (id) => ({
-          url: '/release/realese_get_ava',
-          method: 'get',
+          url: '/release/get_ava',
+          method: 'post',
           params: id,
           headers: queryHeaders
-        })
-        // transformResponse: (response) => response.post,
+        }),
+        transformResponse: (rawResult: { result: ReleaseAvaType }): string => {
+          return rawResult.result.ava_link
+        },
+        providesTags: (result) => ['UpdateRelease']
       }),
       addRelease: build.mutation<ReleaseAvaType, FormData>({
         query: (file) => ({
@@ -68,19 +71,23 @@ export const releaseApi = createApi({
         }),
         invalidatesTags: ['Release']
       }),
-      editRelease: build.mutation({
-        query: () => ({
-          url: '/release/release_update_ava',
-          method: 'put',
+      editRelease: build.mutation<ReleaseAvaType, FormData>({
+        query: (file) => ({
+          url: '/release/update_ava',
+          method: 'post',
+          data: file,
           headers: queryHeaders
-        })
+        }),
+        invalidatesTags: ['UpdateRelease']
       }),
-      deleteRelease: build.mutation({
-        query: () => ({
-          url: '/release/release_delete',
-          method: 'delete',
+      deleteRelease: build.mutation<Record<'uid', string>, Record<'uid', string>>({
+        query: (uid) => ({
+          url: '/release/delete',
+          method: 'post',
+          data: uid,
           headers: queryHeaders
-        })
+        }),
+        invalidatesTags: ['DeleteRelease']
       })
     }
   }

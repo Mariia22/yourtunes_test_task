@@ -1,11 +1,14 @@
 import React, { useState } from 'react'
-import { useAddReleaseMutation } from '../../entities/release/api/releaseApi'
 import { useForm } from '@mantine/form'
-import { checkReleaseAva } from '../../entities/release/lib/checkReleaseAva'
 import { Button, FileInput } from '@mantine/core'
+import { checkReleaseAva } from '../../entities/release/lib/checkReleaseAva'
 
-const UploadReleaseForm: React.FC = () => {
-  const [addRelease] = useAddReleaseMutation()
+interface FormProps {
+  onUpload: (formData: FormData) => void
+  label: string
+}
+
+const UploadReleaseForm: React.FC<FormProps> = ({ onUpload, label }) => {
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   const form = useForm({
@@ -14,7 +17,6 @@ const UploadReleaseForm: React.FC = () => {
 
   const handleSubmit = async (values: { releaseAva: null | File }): Promise<void> => {
     const { releaseAva } = values
-
     if (releaseAva !== null) {
       const errors = await checkReleaseAva(releaseAva)
       setValidationErrors([...errors])
@@ -22,8 +24,8 @@ const UploadReleaseForm: React.FC = () => {
       if (validationErrors.length === 0) {
         const formData = new FormData()
         formData.append('input_ava', releaseAva)
+        onUpload(formData)
         form.reset()
-        await addRelease(formData)
       }
     }
   }
@@ -34,11 +36,11 @@ const UploadReleaseForm: React.FC = () => {
         <FileInput
           accept="image/png,image/jpg"
           clearable
-          label="Add release"
+          label={label}
           placeholder="Choose a cover for your release"
           {...form.getInputProps('releaseAva')}
         />
-        <Button type="submit">Add release</Button>
+        <Button type="submit">{label}</Button>
       </form>
       <div>
         {validationErrors.length !== 0 &&

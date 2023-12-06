@@ -18,7 +18,7 @@ export const appRouter = () =>
           element: <MainPage />
         },
         {
-          path: '/release/:categoryId',
+          path: '/release/:releaseId',
           element: <ReleasePage />
         },
         {
