@@ -1,16 +1,11 @@
 import React, { useState } from 'react'
-import {
-  useAddReleaseMutation,
-  useGetAllReleasesQuery
-} from '../../entities/release/api/releaseApi'
-import { Release } from '../../entities/release/ui/Release'
-import { Button, FileInput } from '@mantine/core'
+import { useAddReleaseMutation } from '../../entities/release/api/releaseApi'
 import { useForm } from '@mantine/form'
 import { checkReleaseAva } from '../../entities/release/lib/checkReleaseAva'
+import { Button, FileInput } from '@mantine/core'
 
-export const ReleasesPage: React.FC = () => {
-  const { data, isLoading, isError } = useGetAllReleasesQuery()
-  const [addRelease, error] = useAddReleaseMutation()
+const UploadReleaseForm: React.FC = () => {
+  const [addRelease] = useAddReleaseMutation()
   const [validationErrors, setValidationErrors] = useState<string[]>([])
 
   const form = useForm({
@@ -33,25 +28,8 @@ export const ReleasesPage: React.FC = () => {
     }
   }
 
-  console.log(data, error)
-  if (isError) {
-    return <div>Oh no, there was an error</div>
-  }
-
-  if (isLoading) {
-    return <div>Loading...</div>
-  }
-
-  if (data === undefined || data.length === 0) {
-    return null
-  }
-
   return (
-    <div>
-      {data.map((release) => (
-        <Release key={release.uid} avalink={release.avalink} />
-      ))}
-
+    <>
       <form onSubmit={form.onSubmit(handleSubmit)}>
         <FileInput
           accept="image/png,image/jpg"
@@ -66,6 +44,8 @@ export const ReleasesPage: React.FC = () => {
         {validationErrors.length !== 0 &&
           validationErrors.map((error) => <div key={error}>{error}</div>)}
       </div>
-    </div>
+    </>
   )
 }
+
+export default UploadReleaseForm

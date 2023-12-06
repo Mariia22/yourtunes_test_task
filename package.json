@@ -18,15 +18,17 @@
     "@mantine/form": "^7.3.0",
     "@mantine/hooks": "^7.3.0",
     "@reduxjs/toolkit": "^2.0.1",
+    "@types/react-router-dom": "^5.3.3",
     "axios": "^1.6.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-redux": "^9.0.1"
+    "react-redux": "^9.0.1",
+    "react-router-dom": "^6.20.1"
   },
   "devDependencies": {
     "@types/node": "^20.10.1",
     "@types/react": "^18.2.37",
-    "@types/react-dom": "^18.2.15",
+    "@types/react-dom": "^18.2.17",
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.10.0",
     "@vitejs/plugin-react": "^4.2.0",

@@ -38,6 +38,7 @@ export const releaseApi = createApi({
   tagTypes: ['Release'],
   endpoints (build) {
     return {
+      // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
       getAllReleases: build.query<ReleaseType[], void>({
         query: () => ({
           url: '/release/list',

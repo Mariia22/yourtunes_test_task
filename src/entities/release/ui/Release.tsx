@@ -1,6 +1,10 @@
 import React from 'react'
-import { type ReleaseType } from '../api/types'
+import { Link } from 'react-router-dom'
 
-export const Release: React.FC<Partial<ReleaseType>> = ({ avalink }) => {
-  return <img src={avalink} width="30px" height="30px" />
+export const Release: React.FC<{ link: string, id: string }> = ({ link, id }) => {
+  return (
+    <Link to={`/release/${id}`}>
+      <img src={link} width="300px" height="300px" />
+    </Link>
+  )
 }
