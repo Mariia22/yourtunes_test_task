@@ -36,10 +36,20 @@ export const ReleasePage: React.FC = () => {
     <Flex direction="column" align="center" gap="xl">
       <Image h={500} w={500} radius="md" src={data} />
       <Flex justify="space-around" gap="md">
-        <Button w={200} onClick={() => handleEdit(true)}>
+        <Button
+          w={200}
+          onClick={() => {
+            handleEdit(true)
+          }}
+        >
           Edit
         </Button>
-        <Button w={200} onClick={() => handleDelete(true)}>
+        <Button
+          w={200}
+          onClick={() => {
+            handleDelete(true)
+          }}
+        >
           Delete
         </Button>
       </Flex>

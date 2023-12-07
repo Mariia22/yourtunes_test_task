@@ -4,13 +4,12 @@ import { useDeleteReleaseMutation } from '../../entities/release/api/releaseApi'
 import { ModalWindow } from '../../shared/ui/Modal'
 import { useNavigate } from 'react-router-dom'
 
-type ReleaseProps = {
+interface ReleaseProps {
   id: string | undefined
   handleDelete: (value: boolean) => void
 }
 
 export const DeleteReleaseComponent: React.FC<ReleaseProps> = ({ id, handleDelete }) => {
-
   const navigate = useNavigate()
   const [deleteRelease, { isLoading, isSuccess, isError, error }] = useDeleteReleaseMutation()
   const handleClick = (): void => {
@@ -35,7 +34,10 @@ export const DeleteReleaseComponent: React.FC<ReleaseProps> = ({ id, handleDelet
           </Button>
           <Button
             w={200}
-            onClick={() => handleDelete(false)}>
+            onClick={() => {
+              handleDelete(false)
+            }}
+          >
             No
           </Button>
         </Flex>
@@ -56,4 +58,3 @@ export const DeleteReleaseComponent: React.FC<ReleaseProps> = ({ id, handleDelet
     </Flex>
   )
 }
-

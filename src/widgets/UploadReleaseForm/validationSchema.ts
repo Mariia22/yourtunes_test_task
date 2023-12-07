@@ -19,11 +19,7 @@ const checkImage = async (provideFile: File): Promise<boolean> => {
   const width = image.width
   const height = image.height
 
-  if (
-    width !== requiredSize ||
-    height !== requiredSize ||
-    width / height !== 1
-  ) {
+  if (width !== requiredSize || height !== requiredSize || width / height !== 1) {
     return false
   }
   return true
