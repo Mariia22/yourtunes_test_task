@@ -50,11 +50,11 @@ export const releaseApi = createApi({
         },
         providesTags: (result) => ['Release', 'UpdateRelease', 'DeleteRelease']
       }),
-      getReleaseById: build.query<string, Record<'uid', string | undefined>>({
+      getReleaseById: build.query<string, string>({
         query: (id) => ({
           url: '/release/get_ava',
           method: 'post',
-          params: id,
+          params: { uid: id },
           headers: queryHeaders
         }),
         transformResponse: (rawResult: { result: ReleaseAvaType }): string => {

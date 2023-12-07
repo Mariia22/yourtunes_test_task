@@ -8,10 +8,11 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, Flex, Image, Loader, Text } from '@mantine/core'
 import UploadReleaseForm from '../../../widgets/UploadReleaseForm/UploadReleaseForm'
 import { ModalWindow } from '../../../shared/ui/Modal'
+import { skipToken } from '@reduxjs/toolkit/query'
 
 export const ReleasePage: React.FC = () => {
   const { releaseId } = useParams()
-  const { data, isError, isLoading } = useGetReleaseByIdQuery({ uid: releaseId })
+  const { data, isError, isLoading } = useGetReleaseByIdQuery(releaseId ?? skipToken)
   const [editRelease, { isLoading: isEditLoading, isSuccess, isError: isEditingError, error }] =
     useEditReleaseMutation()
   const [
