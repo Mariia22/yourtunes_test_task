@@ -16,9 +16,3 @@ export const App: React.FC = () => {
   )
 }
 
-// TODO: logic of the add/edit/delete and add errors/notifications:
-
-// Add: preview or error's info with sad smile. Add modal with 2 buttons "Download one more" or "Go to main"
-// Edit: on the modal
-// Delete: success and button on main
-// Replace my code to yup
